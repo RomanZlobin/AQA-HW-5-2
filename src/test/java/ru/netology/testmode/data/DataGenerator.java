@@ -5,9 +5,8 @@ import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Value;
-import lombok.val;
 import org.junit.jupiter.api.BeforeAll;
 
 import java.util.Locale;
@@ -26,7 +25,8 @@ public class DataGenerator {
 
     private DataGenerator() {
     }
-@BeforeAll
+
+    @BeforeAll
     private static void sendRequest(RegistrationDto user) {
         given()
                 .spec(requestSpec)
@@ -36,35 +36,26 @@ public class DataGenerator {
                 .then()
                 .statusCode(200);
     }
-        // TODO: отправить запрос на указанный в требованиях path, передав в body запроса объект user
-        //  и не забудьте передать подготовленную спецификацию requestSpec.
-        //  Пример реализации метода показан в условии к задаче.
 
 
     public static String getRandomLogin() {
         String login = faker.name().username();
         return login;
     }
-    // TODO: добавить логику для объявления переменной login и задания её значения, для генерации
-    //  случайного логина используйте faker
+
     public static String getRandomPassword() {
         String password = faker.internet().password();
         return password;
     }
-    // TODO: добавить логику для объявления переменной password и задания её значения, для генерации
-    //  случайного пароля используйте faker
+
     public static class Registration {
         private Registration() {
         }
 
         public static RegistrationDto getUser(String status) {
-            RegistrationDto user = new RegistrationDto();
-            user.setLogin(getRandomLogin());
-            user.setPassword(getRandomPassword());
-            user.setStatus(status);
+            RegistrationDto user = new RegistrationDto(getRandomLogin(), getRandomPassword(), status);
             return user;
         }
-            // TODO: создать пользователя user используя методы getRandomLogin(), getRandomPassword() и параметр status
 
 
         public static RegistrationDto getRegisteredUser(String status) {
@@ -73,11 +64,10 @@ public class DataGenerator {
             return registeredUser;
         }
     }
-            // TODO: объявить переменную registeredUser и присвоить ей значение возвращённое getUser(status).
-            // Послать запрос на регистрацию пользователя с помощью вызова sendRequest(registeredUser)
 
 
     @Data
+    @AllArgsConstructor
     public static class RegistrationDto {
         String login;
         String password;
